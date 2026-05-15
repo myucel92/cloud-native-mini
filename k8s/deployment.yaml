@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-native-mini
+  namespace: cloud-mini
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: cloud-native-mini
+
+  template:
+    metadata:
+      labels:
+        app: cloud-native-mini
+
+    spec:
+      containers:
+        - name: cloud-native-mini
+          image: cloud-native-mini:v1
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 80

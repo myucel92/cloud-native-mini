@@ -1,27 +1,28 @@
-# Cloud Native Mini
+# Cloud Native Mini Project
 
-This project demonstrates how to containerize a simple HTML application with Docker and deploy it to a local Kubernetes cluster running on kind.
+A simple cloud-native Python Flask application containerized with Docker and deployed on Kubernetes.
 
-## Technologies Used
+## Tech Stack
 
-- Ubuntu WSL
+- Python
+- Flask
 - Docker
-- kind
 - Kubernetes
-- kubectl
-- k9s
-- Nginx
+- kind
+- Git / GitHub
 
 ## Project Structure
 
 ```text
 cloud-native-mini/
 ├── app/
-│   └── index.html
+│   ├── app.py
+│   └── requirements.txt
 ├── k8s/
 │   ├── namespace.yaml
 │   ├── deployment.yaml
 │   └── service.yaml
 ├── Dockerfile
 ├── deploy.sh
-└── README.md
+├── README.md
+└── .gitignore

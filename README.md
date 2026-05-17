@@ -1,6 +1,22 @@
-# Cloud Native Mini Project
+# AI-Assisted Cloud Native CI/CD Pipeline
 
-A simple cloud-native Python Flask application containerized with Docker and deployed on Kubernetes.
+A cloud-native Flask application containerized with Docker, deployed on Kubernetes, and integrated with a GitHub Actions CI pipeline including security scanning and AI-generated review reporting.
+
+## Project Overview
+
+This project demonstrates a modern DevOps workflow for a containerized Python application.
+
+It includes:
+
+- Python Flask REST API
+- Docker containerization
+- Kubernetes deployment
+- Namespace isolation
+- GitHub Actions CI pipeline
+- Docker image build automation
+- Trivy vulnerability scanning
+- AI-assisted security review report
+- GitHub Actions artifact upload
 
 ## Tech Stack
 
@@ -9,7 +25,9 @@ A simple cloud-native Python Flask application containerized with Docker and dep
 - Docker
 - Kubernetes
 - kind
-- Git / GitHub
+- GitHub Actions
+- Trivy
+- AI Review Script
 
 ## Project Structure
 
@@ -22,6 +40,11 @@ cloud-native-mini/
 │   ├── namespace.yaml
 │   ├── deployment.yaml
 │   └── service.yaml
+├── scripts/
+│   └── ai_review.py
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── Dockerfile
 ├── deploy.sh
 ├── README.md

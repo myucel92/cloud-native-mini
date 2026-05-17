@@ -1,15 +1,12 @@
-name: CI Pipeline
+name: AI DevSecOps Pipeline
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build-test-scan:
+  build-test-scan-review:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,3 +38,13 @@ jobs:
           exit-code: 0
           ignore-unfixed: true
           severity: CRITICAL,HIGH
+
+      - name: Run AI security review
+        run: |
+          python scripts/ai_review.py
+
+      - name: Upload AI review report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-security-review
+          path: ai-review.txt

@@ -93,6 +93,25 @@ Open:
 http://localhost:5000
 ```
 
+## Automated Deployment
+
+The application deployment process is automated with the `deploy.sh` script.
+
+Run:
+
+```bash
+./deploy.sh
+```
+
+This script automatically:
+
+* Builds the Docker image
+* Loads the Docker image into the kind cluster
+* Applies Kubernetes manifests
+* Restarts the Kubernetes deployment
+* Waits for rollout completion
+* Displays Kubernetes resources
+
 ## Deploy to Kubernetes with kind
 
 Create a kind cluster:
@@ -101,27 +120,13 @@ Create a kind cluster:
 kind create cluster --name cloud-mini-cluster
 ```
 
-Load the Docker image into kind:
+Run the automated deployment script:
 
 ```bash
-kind load docker-image cloud-native-mini:v1 --name cloud-mini-cluster
+./deploy.sh
 ```
 
-Apply Kubernetes manifests:
-
-```bash
-kubectl apply -f k8s/namespace.yaml
-kubectl apply -f k8s/deployment.yaml
-kubectl apply -f k8s/service.yaml
-```
-
-Check Kubernetes resources:
-
-```bash
-kubectl get all -n cloud-mini
-```
-
-Access the service locally:
+Access the application locally:
 
 ```bash
 kubectl port-forward -n cloud-mini service/cloud-native-mini-service 8080:80

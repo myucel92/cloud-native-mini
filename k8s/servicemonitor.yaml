@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cloud-native-mini-monitor
+  namespace: cloud-mini
+  labels:
+    release: monitoring
+
+spec:
+  selector:
+    matchLabels:
+      app: cloud-native-mini
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s

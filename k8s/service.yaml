@@ -3,14 +3,17 @@ kind: Service
 metadata:
   name: cloud-native-mini-service
   namespace: cloud-mini
+  labels:
+    app: cloud-native-mini
 
 spec:
   selector:
     app: cloud-native-mini
 
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5000
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 5000
 
   type: ClusterIP

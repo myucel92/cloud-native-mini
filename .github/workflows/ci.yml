@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-test-scan-review:
@@ -18,22 +21,26 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+
       - name: Install dependencies
         run: |
           pip install -r app/requirements.txt
 
-      - name: Check Flask app syntax
+      - name: Validate Flask app syntax
         run: |
           python -m py_compile app/app.py
 
       - name: Build Docker image
         run: |
-          docker build -t cloud-native-mini:v1 .
+          docker build -t cloud-native-mini:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: cloud-native-mini:v1
+          image-ref: cloud-native-mini:${{ github.sha }}
           format: table
           exit-code: 0
           ignore-unfixed: true

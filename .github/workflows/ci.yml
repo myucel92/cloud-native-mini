@@ -1,15 +1,16 @@
 name: AI DevSecOps Pipeline
 
 on:
-  permissions:
-    contents: read
-    pull-requests: write
   push:
     branches:
       - main
   pull_request:
     branches:
       - main
+
+permissions:
+    contents: read
+    pull-requests: write
 
 jobs:
   build-test-scan-review:

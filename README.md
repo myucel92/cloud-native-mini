@@ -1,37 +1,46 @@
 # AI-Assisted Cloud Native CI/CD Pipeline
 
-A cloud-native Flask application containerized with Docker, deployed on Kubernetes, and integrated with a GitHub Actions CI pipeline including security scanning, AI-generated review reporting, and monitoring with Prometheus and Grafana.
+A cloud-native Flask application containerized with Docker, deployed on Kubernetes, and integrated with monitoring, ingress routing, and CI/CD automation.
+
+---
 
 ## Project Overview
 
-This project demonstrates a modern DevOps workflow for a containerized Python application.
+This project demonstrates a modern DevOps workflow for a containerized Python application running on Kubernetes.
 
 It includes:
 
-* Python Flask REST API
-* Docker containerization
-* Kubernetes deployment
-* Namespace isolation
-* GitHub Actions CI pipeline
-* Docker image build automation
-* Trivy vulnerability scanning
-* AI-assisted security review report
-* Prometheus monitoring
-* Grafana dashboards
-* Automated monitoring installation
+- Python Flask REST API
+- Docker containerization
+- Kubernetes deployment
+- Namespace isolation
+- NGINX Ingress routing
+- GitHub Actions CI pipeline
+- Docker image build automation
+- Trivy vulnerability scanning
+- AI-generated security review reporting
+- Prometheus monitoring
+- Grafana dashboards
+- Custom application metrics
+- Automated monitoring installation
+
+---
 
 ## Tech Stack
 
-* Python
-* Flask
-* Docker
-* Kubernetes
-* kind
-* GitHub Actions
-* Trivy
-* Helm
-* Prometheus
-* Grafana
+- Python
+- Flask
+- Docker
+- Kubernetes
+- kind
+- GitHub Actions
+- Trivy
+- Helm
+- Prometheus
+- Grafana
+- NGINX Ingress
+
+---
 
 ## Project Structure
 
@@ -43,7 +52,11 @@ cloud-native-mini/
 ├── k8s/
 │   ├── namespace.yaml
 │   ├── deployment.yaml
-│   └── service.yaml
+│   ├── service.yaml
+│   ├── ingress.yaml
+│   └── servicemonitor.yaml
+├── monitoring/
+│   └── grafana-dashboard.json
 ├── scripts/
 │   ├── ai_review.py
 │   └── install_monitoring.sh
@@ -56,12 +69,17 @@ cloud-native-mini/
 └── .gitignore
 ```
 
+---
+
 ## API Endpoints
 
 ```http
 GET /
 GET /health
+GET /metrics
 ```
+
+---
 
 ## Example Response
 
@@ -73,18 +91,20 @@ GET /health
 }
 ```
 
+---
+
 ## Run Locally with Docker
 
 Build the Docker image:
 
 ```bash
-docker build -t cloud-native-mini:v1 .
+docker build -t cloud-native-mini:v2 .
 ```
 
 Run the container:
 
 ```bash
-docker run -p 5000:5000 cloud-native-mini:v1
+docker run -p 5000:5000 cloud-native-mini:v2
 ```
 
 Open:
@@ -92,6 +112,8 @@ Open:
 ```text
 http://localhost:5000
 ```
+
+---
 
 ## Automated Deployment
 
@@ -105,12 +127,14 @@ Run:
 
 This script automatically:
 
-* Builds the Docker image
-* Loads the Docker image into the kind cluster
-* Applies Kubernetes manifests
-* Restarts the Kubernetes deployment
-* Waits for rollout completion
-* Displays Kubernetes resources
+- Builds the Docker image
+- Loads the Docker image into the kind cluster
+- Applies Kubernetes manifests
+- Restarts the Kubernetes deployment
+- Waits for rollout completion
+- Displays Kubernetes resources
+
+---
 
 ## Deploy to Kubernetes with kind
 
@@ -120,23 +144,53 @@ Create a kind cluster:
 kind create cluster --name cloud-mini-cluster
 ```
 
-Run the automated deployment script:
+Run the deployment script:
 
 ```bash
 ./deploy.sh
 ```
 
-Access the application locally:
+---
+
+## Access Application with Ingress
+
+Run:
 
 ```bash
-kubectl port-forward -n cloud-mini service/cloud-native-mini-service 8080:80
+kubectl port-forward -n ingress-nginx service/ingress-nginx-controller 8080:80
 ```
 
-Open:
+Access:
 
 ```text
-http://localhost:8080
+http://cloud-mini.local
 ```
+
+Example request:
+
+```bash
+curl -H "Host: cloud-mini.local" http://localhost:8080
+```
+
+---
+
+## Architecture
+
+```text
+Client
+   ↓
+NGINX Ingress
+   ↓
+Kubernetes Service
+   ↓
+Flask Application Pod
+   ↓
+Prometheus
+   ↓
+Grafana
+```
+
+---
 
 ## CI/CD Pipeline
 
@@ -151,23 +205,25 @@ Pipeline stages:
 5. Build Docker image
 6. Run Trivy vulnerability scan
 7. Generate AI-assisted security review
-8. Upload AI review report as an artifact
+8. Upload AI review report artifact
+
+---
 
 ## Security Scanning
 
-This project uses Trivy to scan the Docker image for vulnerabilities.
+This project uses Trivy to scan Docker images for vulnerabilities.
 
 The scan checks for:
 
-* CRITICAL vulnerabilities
-* HIGH vulnerabilities
-* Unfixed package issues
+- CRITICAL vulnerabilities
+- HIGH vulnerabilities
+- Unfixed package issues
+
+---
 
 ## AI-Assisted Review
 
-The pipeline includes a Python-based AI review script that generates a security review report based on the scan result.
-
-The generated report is uploaded as a GitHub Actions artifact.
+The pipeline includes a Python-based AI review script that generates a security analysis report based on vulnerability scan results.
 
 Example report:
 
@@ -187,28 +243,49 @@ Recommendations:
 - Run periodic vulnerability scans.
 ```
 
+---
+
 ## Monitoring & Observability
 
 This project includes a monitoring stack based on Prometheus and Grafana.
 
 ### Monitoring Components
 
-* Prometheus → collects Kubernetes and application metrics
-* Grafana → visualizes metrics using dashboards
-* kube-prometheus-stack → provides a production-ready monitoring stack for Kubernetes
+- Prometheus → collects Kubernetes and application metrics
+- Grafana → visualizes metrics using dashboards
+- kube-prometheus-stack → production-ready monitoring stack
 
 ### Features
 
-* Kubernetes cluster monitoring
-* Node metrics
-* Pod metrics
-* Namespace monitoring
-* Grafana dashboards
-* Automated monitoring stack installation
+- Kubernetes cluster monitoring
+- Node metrics
+- Pod metrics
+- Namespace monitoring
+- Grafana dashboards
+- Custom Flask metrics
+- Automated monitoring installation
+
+---
+
+## Custom Application Metrics
+
+The Flask application exposes Prometheus metrics through:
+
+```text
+/metrics
+```
+
+Example metric:
+
+```text
+flask_app_requests_total
+```
+
+These metrics are collected by Prometheus and visualized through Grafana dashboards.
+
+---
 
 ## Install Monitoring Stack
-
-The monitoring stack can be installed automatically using the provided script.
 
 Run:
 
@@ -216,13 +293,15 @@ Run:
 ./scripts/install_monitoring.sh
 ```
 
-This script will:
+This script automatically:
 
-* Create the monitoring namespace if it does not exist
-* Install or upgrade the kube-prometheus-stack Helm chart
-* Deploy Prometheus and Grafana
-* Display monitoring pod status
-* Provide Grafana access instructions
+- Creates the monitoring namespace
+- Installs kube-prometheus-stack
+- Deploys Prometheus and Grafana
+- Displays monitoring pod status
+- Provides Grafana access instructions
+
+---
 
 ## Access Grafana
 
@@ -238,43 +317,63 @@ Open:
 http://localhost:3000
 ```
 
-Grafana credentials can be retrieved from Kubernetes secrets.
+Grafana credentials are stored in Kubernetes secrets.
+
+---
 
 ## Example Dashboards
 
-The monitoring stack includes preconfigured Kubernetes dashboards such as:
+Included dashboards visualize:
 
-* Kubernetes / Compute Resources / Cluster
-* Kubernetes / Compute Resources / Namespace
-* Kubernetes / Compute Resources / Pod
+- Kubernetes cluster metrics
+- Namespace resource usage
+- Pod resource usage
+- HTTP request metrics
+- Application monitoring
 
-These dashboards help visualize cluster resource usage and application metrics.
+---
 
 ## Purpose of Observability
 
-This monitoring setup demonstrates the basics of observability in cloud-native environments.
+This monitoring setup demonstrates observability fundamentals in cloud-native environments.
 
-It helps monitor:
+It provides visibility into:
 
-* cluster health
-* pod resource usage
-* node metrics
-* application performance
+- Cluster health
+- Pod resource usage
+- Node metrics
+- Application performance
+- Request monitoring
 
-and provides visibility into the Kubernetes environment.
+---
 
 ## Purpose
 
-This project was created as a beginner-friendly but practical DevOps / Cloud Engineering portfolio project.
+This project was created as a practical DevOps / Cloud Engineering portfolio project.
 
-It demonstrates how to build, containerize, scan, monitor, and deploy a cloud-native application using modern DevOps tools.
+It demonstrates how to:
+
+- Build containerized applications
+- Deploy applications on Kubernetes
+- Configure ingress routing
+- Monitor applications with Prometheus & Grafana
+- Perform vulnerability scanning
+- Automate CI/CD workflows
+
+---
 
 ## Future Improvements
 
-* Real OpenAI API integration
-* Kubernetes deployment automation
-* Helm chart support
-* Custom application metrics
-* Prometheus alert rules
-* Terraform infrastructure provisioning
-* GitOps deployment with ArgoCD
+- Horizontal Pod Autoscaler (HPA)
+- Loki centralized logging
+- Production-grade Helm charts
+- Multi-environment deployment strategy
+- Terraform infrastructure provisioning
+- GitOps deployment with ArgoCD
+- Production-ready deployment pipeline
+
+---
+
+## Author
+
+Mustafa Yucel

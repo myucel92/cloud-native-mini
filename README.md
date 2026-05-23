@@ -172,25 +172,21 @@ Example request:
 curl -H "Host: cloud-mini.local" http://localhost:8080
 ```
 
----
 
-## Architecture
+## Current Architecture
 
-```text
-Client
-   ↓
-NGINX Ingress
-   ↓
-Kubernetes Service
-   ↓
-Flask Application Pod
-   ↓
-Prometheus
-   ↓
-Grafana
-```
+The diagram below represents the current architecture of the project.
 
----
+The architecture will continue evolving with future improvements such as:
+
+- Helm Charts
+- ArgoCD GitOps
+- HPA Autoscaling
+- Loki Logging
+- Production Deployments
+
+![Architecture](docs/images/architecture.png)
+
 
 ## CI/CD Pipeline
 

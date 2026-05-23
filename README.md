@@ -329,6 +329,34 @@ Included dashboards visualize:
 
 ---
 
+## Helm Deployment
+
+This project includes Helm chart support for Kubernetes deployments.
+
+Deploy with Helm:
+
+```bash
+helm upgrade --install cloud-native-mini ./cloud-native-mini-chart -n cloud-mini
+```
+
+## Horizontal Pod Autoscaler
+
+This project includes Horizontal Pod Autoscaler (HPA) support for Kubernetes deployments.
+
+The HPA automatically scales Flask application pods based on CPU utilization.
+
+Apply the HPA configuration:
+
+```bash
+kubectl apply -f k8s/hpa.yaml
+```
+
+Check HPA status:
+
+```bash
+kubectl get hpa -n cloud-mini
+```
+
 ## Purpose of Observability
 
 This monitoring setup demonstrates observability fundamentals in cloud-native environments.
